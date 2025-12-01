@@ -70,9 +70,12 @@
             </div>
 
             <div class="flex flex-col gap-4">
-                <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
-                    <span class="truncate">Tambah Aset Baru</span>
-                </button>
+                <form method="POST" action="{{ route('logout') }}" class="w-full">
+                    @csrf
+                    <button type="submit" class="flex w-full min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-red-500 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-red-600 transition-colors">
+                        <span class="truncate">Logout</span>
+                    </button>
+                </form>
 
                 <div class="flex items-center gap-3 border-t border-gray-200 pt-4">
                     <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"

@@ -80,9 +80,8 @@ class DashboardController extends Controller
         ]);
 
         // Get authenticated user
-        $user = auth()->user();
 
-        return view('admin.dashboard', compact('stats', 'latestMutations', 'latestDamages', 'user'));
+        return view('admin.dashboard', compact('stats', 'latestMutations', 'latestDamages'));
     }
 
     /**

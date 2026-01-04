@@ -44,7 +44,7 @@
                 <div class="mb-8 text-center lg:text-left">
                     <div class="flex items-center gap-2 justify-center lg:justify-start">
                         <span class="material-symbols-outlined text-primary text-3xl">inventory</span>
-                        <h2 class="text-2xl font-bold text-gray-900">AssetFlow</h2>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ config('app.name') }}</h2>
                     </div>
                 </div>
 
@@ -113,7 +113,7 @@
 
                 <div class="mt-12">
                     <footer class="text-center">
-                        <p class="text-sm text-gray-500">© 2023 AssetFlow Inc. All rights reserved.</p>
+                        <p class="text-sm text-gray-500">© {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
                     </footer>
                 </div>
             </div>

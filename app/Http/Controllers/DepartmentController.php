@@ -19,8 +19,11 @@ class DepartmentController extends Controller
     if ($request->filled('id')) {
         $selectedDepartment = Department::where('parent_id', $request->id);
     } else {
-        $selectedDepartmentDir = Department::whereNull('parent_id')->get()->first();        
-        $selectedDepartment = Department::where('parent_id', $selectedDepartmentDir->id);
+        $selectedDepartmentDir = Department::whereNull('parent_id')->first();
+        // Safely handle empty root departments
+        $selectedDepartment = $selectedDepartmentDir
+            ? Department::where('parent_id', $selectedDepartmentDir->id)
+            : Department::query()->whereRaw('1=0');
     }
     
     //dd($selectedDepartment);

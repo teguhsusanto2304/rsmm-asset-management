@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\AssetController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -27,21 +28,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// routes/web.php
 Route::middleware(['auth'])->prefix('master-data')->group(function () {
     Route::resource('users', UserController::class);
-});
-
-// routes/web.php
-Route::middleware(['auth'])->prefix('master-data')->group(function () {
     Route::resource('departments', DepartmentController::class);
-});
-
-Route::middleware(['auth'])->prefix('master-data')->group(function () {
     Route::resource('locations', LocationController::class);
-});
-
-Route::middleware(['auth'])->prefix('master-data')->group(function () {
     Route::resource('categories', CategoryController::class);
+    Route::resource('assets', AssetController::class)->except(['destroy']);
+    Route::get('assets/{asset}/label', [AssetController::class, 'label'])->name('assets.label');
+    Route::get('assets/test', function () {
+        dd('test');
+    })->name('assets.test');
+    Route::get('assets/import', [AssetController::class, 'import'])->name('assets.import');
+    Route::post('assets/import', [AssetController::class, 'processImport'])->name('assets.import.process');
+    Route::get('assets/template/download', [AssetController::class, 'downloadTemplate'])->name('assets.template.download');
 });
 

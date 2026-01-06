@@ -20,9 +20,16 @@
                 <span class="material-symbols-outlined">dashboard</span>
                 Dashboard
             </a>
+            <div x-show="open" x-collapse class="ml-9 mt-1 flex flex-col gap-1">
+                    <a href="{{ route('assets.index') }}"
+                       class="rounded-md px-3 py-2 text-sm
+                       {{ request()->routeIs('assets.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-600 hover:bg-gray-100' }}">
+                        Manajemen Asset
+                    </a>
+                </div>
 
             <!-- MASTER DATA -->
-            <div x-data="{ open: {{ request()->routeIs('users.*') ? 'true' : 'false' }} }" class="flex flex-col">
+            <div x-data="{ open: {{ request()->routeIs('users.*') || request()->routeIs('departments.*') || request()->routeIs('locations.*') || request()->routeIs('categories.*') || request()->routeIs('assets.*') ? 'true' : 'false' }} }" class="flex flex-col">
                 <!-- Parent -->
                 <button
                     @click="open = !open"
@@ -67,6 +74,7 @@
                         Kategori
                     </a>
                 </div>
+                
             </div>
 
         </div>

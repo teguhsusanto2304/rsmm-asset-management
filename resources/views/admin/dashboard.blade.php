@@ -15,7 +15,7 @@
 <div class="flex justify-between items-start">
 <div class="flex flex-col gap-1">
 <p class="text-green-50 text-sm font-medium uppercase tracking-wider">Jumlah Total Aset</p>
-<p class="text-4xl font-bold leading-tight mt-1">1,240</p>
+<p class="text-4xl font-bold leading-tight mt-1">{{ $stats['total_assets'] }}</p>
 </div>
 <div class="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
 <span class="material-symbols-outlined text-3xl">inventory_2</span>
@@ -30,7 +30,7 @@
 <div class="flex justify-between items-start">
 <div class="flex flex-col gap-1">
 <p class="text-gray-800/80 text-sm font-medium uppercase tracking-wider">Aset dengan Permohonan Mutasi</p>
-<p class="text-4xl font-bold leading-tight mt-1">86</p>
+<p class="text-4xl font-bold leading-tight mt-1">{{ $stats['mutated_assets'] }}</p>
 </div>
 <div class="p-3 bg-white/30 rounded-lg backdrop-blur-sm">
 <span class="material-symbols-outlined text-3xl">move_up</span>
@@ -45,7 +45,7 @@
 <div class="flex justify-between items-start">
 <div class="flex flex-col gap-1">
 <p class="text-red-50 text-sm font-medium uppercase tracking-wider">Aset dengan Permohonan Diperbaiki</p>
-<p class="text-4xl font-bold leading-tight mt-1">15</p>
+<p class="text-4xl font-bold leading-tight mt-1">{{ $stats['damaged_assets'] }}</p>
 </div>
 <div class="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
 <span class="material-symbols-outlined text-3xl">handyman</span>

@@ -33,13 +33,16 @@ Route::middleware(['auth'])->prefix('master-data')->group(function () {
     Route::resource('departments', DepartmentController::class);
     Route::resource('locations', LocationController::class);
     Route::resource('categories', CategoryController::class);
-    Route::resource('assets', AssetController::class)->except(['destroy']);
-    Route::get('assets/{asset}/label', [AssetController::class, 'label'])->name('assets.label');
-    Route::get('assets/test', function () {
-        dd('test');
-    })->name('assets.test');
+    
+    // Custom asset routes must come BEFORE resource route to prevent {asset} param matching
     Route::get('assets/import', [AssetController::class, 'import'])->name('assets.import');
     Route::post('assets/import', [AssetController::class, 'processImport'])->name('assets.import.process');
     Route::get('assets/template/download', [AssetController::class, 'downloadTemplate'])->name('assets.template.download');
+    Route::get('assets/test', function () {
+        dd('test');
+    })->name('assets.test');
+    
+    Route::resource('assets', AssetController::class)->except(['destroy']);
+    Route::get('assets/{asset}/label', [AssetController::class, 'label'])->name('assets.label');
 });
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -14,10 +15,10 @@ class DashboardController extends Controller
     {
         // Statistics - dummy data
         $stats = [
-            'total_assets' => 1240,
-            'mutated_assets' => 86,
-            'damaged_assets' => 15,
-            'in_handling' => 8,
+            'total_assets' => Asset::where('status','available')->count(),
+            'mutated_assets' => Asset::where('status','mutated')->count(),
+            'damaged_assets' => Asset::where('status','damaged')->count(),
+            'in_handling' => Asset::where('status','in_handling')->count(),
         ];
 
         // Latest Mutation Requests - dummy data

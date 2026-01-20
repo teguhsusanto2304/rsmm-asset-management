@@ -61,7 +61,7 @@
 <tr>
 <th class="px-6 py-3 rounded-l-lg" scope="col">User</th>
 <th class="px-6 py-3" scope="col">Departemen</th>
-<th class="px-6 py-3" scope="col">User Group</th>
+<th class="px-6 py-3" scope="col">Permission Role</th>
 <th class="px-6 py-3" scope="col">Status</th>
 <th class="px-6 py-3 rounded-r-lg" scope="col">Actions</th>
 </tr>
@@ -80,9 +80,36 @@
         </div>
     </td>
 
-    <td class="px-6 py-4 text-gray-600">{{ $user->department ?? '-' }}</td>
+    <td class="px-6 py-4 text-gray-600">
+        @if($user->department)
+            <span class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">
+                <span class="material-symbols-outlined text-xs">apartment</span>
+                {{ $user->department->department }}
+            </span>
+        @else
+            <span class="text-gray-400 text-sm">-</span>
+        @endif
+    </td>
 
-    <td class="px-6 py-4 text-gray-600 capitalize">{{ $user->role }}</td>
+    <td class="px-6 py-4 text-gray-600">
+        @if($user->roles->count() > 0)
+            <div class="flex flex-wrap gap-1">
+                @foreach($user->roles->take(2) as $role)
+                    <span class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">
+                        <span class="material-symbols-outlined text-xs">check</span>
+                        {{ ucfirst(str_replace('_', ' ', $role->name)) }}
+                    </span>
+                @endforeach
+                @if($user->roles->count() > 2)
+                    <span class="inline-flex items-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
+                        +{{ $user->roles->count() - 2 }}
+                    </span>
+                @endif
+            </div>
+        @else
+            <span class="text-gray-400 text-sm">Belum ada role</span>
+        @endif
+    </td>
 
     <td class="px-6 py-4">
         @if($user->status === 'active')

@@ -32,20 +32,38 @@
     </script>
 </head>
 
-<body class="bg-background-light font-display">
+<body class="bg-background-light font-display" x-data="{ sidebarOpen: false }">
 
-<div class="relative flex min-h-screen w-full">
+<div class="relative flex min-h-screen w-full" x-data="{ sidebarOpen: false }">
 
-    {{-- Sidebar --}}
-    @include('layouts.admin.partials.sidebar')
+    {{-- Sidebar (Desktop Only) --}}
+    <div class="hidden lg:flex lg:w-64 flex-col">
+        @include('layouts.admin.partials.sidebar')
+    </div>
 
-    <div class="flex flex-1 flex-col">
+    {{-- Mobile Sidebar Overlay --}}
+    <div x-show="sidebarOpen" 
+         @click="sidebarOpen = false"
+         class="fixed inset-0 z-40 bg-black/50 lg:hidden"
+         x-transition>
+    </div>
+
+    {{-- Mobile Sidebar --}}
+    <div x-show="sidebarOpen"
+         class="fixed left-0 top-0 z-50 h-screen w-64 overflow-y-auto lg:hidden"
+         x-transition>
+        @include('layouts.admin.partials.sidebar')
+    </div>
+
+    <div class="flex flex-1 flex-col w-full">
 
         {{-- Header --}}
-        @include('layouts.admin.partials.header')
+        <div @toggle-sidebar.window="sidebarOpen = !sidebarOpen">
+            @include('layouts.admin.partials.header')
+        </div>
 
         {{-- Main Content --}}
-        <main class="flex-1 bg-gray-50 px-10 py-8">
+        <main class="flex-1 bg-gray-50 px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
             @yield('content')
         </main>
 
@@ -54,6 +72,16 @@
 
     </div>
 </div>
+
+<script>
+    // Close sidebar when navigating on mobile
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (link && window.innerWidth < 1024) {
+            document.dispatchEvent(new CustomEvent('toggle-sidebar'));
+        }
+    });
+</script>
 
 </body>
 </html>

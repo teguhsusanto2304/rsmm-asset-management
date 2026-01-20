@@ -207,6 +207,11 @@
                                        title="Detail">
                                         <span class="material-symbols-outlined text-base">visibility</span>
                                     </a>
+                                    <a href="{{ route('assets.assign', $asset) }}"
+                                       class="text-blue-600 hover:bg-blue-100 p-1 rounded"
+                                       title="Tugaskan">
+                                        <span class="material-symbols-outlined text-base">assignment</span>
+                                    </a>
                                     <a href="{{ route('assets.edit', $asset) }}"
                                        class="text-primary hover:bg-primary/10 p-1 rounded"
                                        title="Edit">

@@ -55,6 +55,37 @@ class AssetController extends Controller
         return view('admin.assets.index', compact('assets', 'categories', 'departments', 'locations', 'users'));
     }
 
+    public function myAssets(Request $request)
+    {
+        $assets = Asset::with(['category', 'department', 'location', 'assignedUser'])
+            ->where('assigned_to', auth()->id())
+            ->when($request->search, function ($q) use ($request) {
+                $search = $request->search;
+                $q->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('barcode', 'like', "%{$search}%")
+                      ->orWhere('asset_tag', 'like', "%{$search}%")
+                      ->orWhere('serial_number', 'like', "%{$search}%");
+                });
+            })
+            ->when($request->category_id, function ($q) use ($request) {
+                $q->where('category_id', $request->category_id);
+            })
+            ->when($request->status, function ($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+            ->when($request->condition, function ($q) use ($request) {
+                $q->where('condition', $request->condition);
+            })
+            ->orderByDesc('created_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        $categories = $this->getHierarchicalCategories();
+
+        return view('admin.assets.my-assets', compact('assets', 'categories'));
+    }
+
     public function create()
     {
         $categories = $this->getHierarchicalCategories();
@@ -113,6 +144,39 @@ class AssetController extends Controller
         }
 
         return view('admin.assets.label', compact('asset', 'qrSvg'));
+    }
+
+    public function showAssign(Asset $asset)
+    {
+        $asset->load(['category', 'department', 'location', 'assignedUser']);
+        $users = User::orderBy('name')->get();
+
+        return view('admin.assets.assign', compact('asset', 'users'));
+    }
+
+    public function processAssign(Request $request, Asset $asset)
+    {
+        $validated = $request->validate([
+            'assigned_to' => 'required|exists:users,id',
+            'assigned_date' => 'required|date',
+            'return_date' => 'nullable|date|after_or_equal:assigned_date',
+            'notes' => 'nullable|string',
+        ], [
+            'assigned_to.required' => 'Pilih pengguna untuk ditugaskan asset',
+            'assigned_date.required' => 'Tanggal penugasan harus diisi',
+        ]);
+
+        $asset->update([
+            'assigned_to' => $validated['assigned_to'],
+            'assigned_date' => $validated['assigned_date'],
+            'return_date' => $validated['return_date'] ?? null,
+            'status' => 'assigned',
+            'updated_by' => auth()->id(),
+        ]);
+
+        return redirect()
+            ->route('assets.show', $asset)
+            ->with('success', 'Asset berhasil ditugaskan ke pengguna');
     }
 
     public function edit(Asset $asset)

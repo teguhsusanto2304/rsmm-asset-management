@@ -4,16 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Department;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $mngusers = User::when($request->search, function ($q) use ($request) {
+        $mngusers = User::with('roles', 'department')
+            ->when($request->search, function ($q) use ($request) {
                 $q->where('name', 'like', "%{$request->search}%")
                   ->orWhere('email', 'like', "%{$request->search}%");
             })
-            ->when($request->role, fn ($q) => $q->where('role', $request->role))
+            ->latest()
             ->paginate(10);
 
         return view('admin.users.users', compact('mngusers'));
@@ -21,47 +24,80 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('admin.users.create');
+        $departments = Department::orderBy('department')->get();
+        return view('admin.users.create', compact('departments'));
     }
 
     public function edit(User $user)
     {
-        return view('admin.users.edit',compact('user'));
+        // Load roles with permissions count
+        $roles = Role::withCount('permissions')
+            ->orderBy('name')
+            ->get();
+        
+        // Get user's current role IDs
+        $userRoles = $user->roles()->pluck('id')->toArray();
+        
+        // Get all departments for selection
+        $departments = Department::orderBy('department')->get();
+
+        return view('admin.users.edit', compact('user', 'roles', 'userRoles', 'departments'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'       => 'required',
-            'email'      => 'required|email|unique:users',
-            'password'   => 'required|min:6',
-            'department' => 'nullable',
-            'role'       => 'required',
-            'status'     => 'required',
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|email|unique:users',
+            'password'      => 'required|min:8|confirmed',
+            'department_id' => 'nullable|uuid|exists:departments,id',
+            'role'          => 'nullable|string',
+            'status'        => 'required|in:active,inactive',
+            'roles'         => 'array',
+            'roles.*'       => 'exists:roles,id',
         ]);
 
         $data['password'] = bcrypt($data['password']);
-        $data['role'] = strtolower($data['role']);
-        $data['status'] = strtolower($data['status']);
+        $data['status'] = $data['status'];
 
-        User::create($data);
+        $user = User::create($data);
 
-        return redirect()->route('users.index')->with('success', 'User created');
+        // Assign Spatie roles using Role models
+        $roles = Role::whereIn('id', array_filter(array_map('intval', $data['roles'] ?? [])))->get();
+        if ($roles->isNotEmpty()) {
+            $user->syncRoles($roles);
+        }
+
+        return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan');
     }
 
     public function update(Request $request, User $user)
     {
         $data = $request->validate([
-            'name'       => 'required',
-            'email'      => "required|email|unique:users,email,$user->id",
-            'department' => 'nullable',
-            'role'       => 'required',
-            'status'     => 'required',
+            'name'          => 'required|string|max:255',
+            'email'         => "required|email|unique:users,email,$user->id",
+            'password'      => 'nullable|min:8|confirmed',
+            'department_id' => 'nullable|uuid|exists:departments,id',
+            'role'          => 'nullable|string',
+            'status'        => 'required|in:active,inactive',
+            'roles'         => 'array',
+            'roles.*'       => 'exists:roles,id',
         ]);
+
+        // Only update password if provided
+        if (!empty($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']);
+        }
 
         $user->update($data);
 
-        return back()->with('success', 'User updated');
+        // Sync Spatie roles using Role models
+        $roles = Role::whereIn('id', array_filter(array_map('intval', $data['roles'] ?? [])))->get();
+        $user->syncRoles($roles);
+
+        return back()->with('success', 'User berhasil diperbarui');
     }
 
     public function destroy(User $user)

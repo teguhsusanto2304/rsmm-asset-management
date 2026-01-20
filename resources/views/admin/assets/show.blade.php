@@ -11,6 +11,11 @@
             </p>
         </div>
         <div class="flex gap-2">
+            <a href="{{ route('assets.assign', $asset) }}"
+               class="flex items-center gap-1 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-bold hover:bg-blue-700">
+                <span class="material-symbols-outlined text-base">assignment</span>
+                Tugaskan
+            </a>
             <a href="{{ route('assets.edit', $asset) }}"
                class="flex items-center gap-1 px-4 py-2 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/90">
                 <span class="material-symbols-outlined text-base">edit</span>

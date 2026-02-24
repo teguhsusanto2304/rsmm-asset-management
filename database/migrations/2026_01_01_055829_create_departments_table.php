@@ -20,7 +20,7 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('departments')
                 ->onDelete('cascade');
-            $table->foreignId('user_id')
+            $table->foreignUuid('user_id')
       ->constrained('users')
       ->onDelete('cascade');
             // 3. Department Name

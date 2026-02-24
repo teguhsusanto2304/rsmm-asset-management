@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('model_number')->nullable();
             
             // Assignment & Ownership
-            $table->foreignId('assigned_to')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignUuid('assigned_to')->nullable()->constrained('users')->nullOnDelete();
             $table->date('assigned_date')->nullable();
             $table->date('return_date')->nullable();
             
@@ -85,8 +85,8 @@ return new class extends Migration
             
             // Audit Fields
             $table->softDeletes();
-            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignUuid('created_by')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
             
             // Indexes for better query performance

@@ -10,10 +10,6 @@ return new class extends Migration
     {
         Schema::create('asset_transfer_requests', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('asset_id');
-            $table->uuid('requested_by');
-            $table->uuid('requested_from'); // Current asset owner
-            $table->uuid('requested_to'); // Who wants to borrow/receive
             $table->enum('type', ['borrow', 'move'])->default('borrow'); // borrow or move
             $table->enum('status', ['pending', 'approved', 'rejected', 'completed', 'returned'])->default('pending');
             $table->date('request_date');
@@ -26,10 +22,10 @@ return new class extends Migration
             $table->softDeletes();
 
             // Foreign keys
-            $table->foreign('asset_id')->references('id')->on('asset')->onDelete('cascade');
-            $table->foreign('requested_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('requested_from')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('requested_to')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignUuid('asset_id')->constrained('asset')->onDelete('cascade');
+            $table->foreignUuid('requested_by')->constrained('users')->onDelete('cascade');
+            $table->foreignUuid('requested_from')->constrained('users')->onDelete('cascade');
+            $table->foreignUuid('requested_to')->constrained('users')->onDelete('cascade');
         });
     }
 

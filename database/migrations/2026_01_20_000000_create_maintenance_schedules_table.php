@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('maintenance_schedules', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('asset_id');
-            $table->foreign('asset_id')->references('id')->on('assets')->onDelete('cascade');
-            $table->uuid('created_by');
-            $table->foreign('created_by')->references('id')->on('users');
+            $table->foreignUuid('asset_id')->constrained('asset')->onDelete('cascade');
+            $table->foreignUuid('created_by')->constrained('users');
             $table->string('name'); // e.g., "Quarterly Inspection"
             $table->text('description')->nullable();
             $table->enum('frequency', ['weekly', 'monthly', 'quarterly', 'semi_annual', 'annual'])->default('monthly');

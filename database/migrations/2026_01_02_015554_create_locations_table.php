@@ -23,7 +23,7 @@ return new class extends Migration
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
 
             // 🔗 Relation to department
-            $table->foreignId('department_id')
+            $table->foreignUuid('department_id')
                   ->nullable()
                   ->constrained('departments')
                   ->nullOnDelete();

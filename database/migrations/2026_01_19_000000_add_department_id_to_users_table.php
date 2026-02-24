@@ -13,14 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             // Add department_id foreign key
-            $table->uuid('department_id')->nullable()->after('password');
-            
-            // Add foreign key constraint
-            $table->foreign('department_id')
-                  ->references('id')
-                  ->on('departments')
-                  ->onDelete('set null')
-                  ->onUpdate('cascade');
+            $table->foreignUuid('department_id')->nullable()->after('password')->constrained('departments')->nullOnDelete();
         });
     }
 

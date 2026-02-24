@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('maintenance', function (Blueprint $table) {
-            $table->uuid('schedule_id')->nullable()->after('asset_id');
-            $table->foreign('schedule_id')->references('id')->on('maintenance_schedules')->onDelete('set null');
+            $table->foreignUuid('schedule_id')->nullable()->after('asset_id')->constrained('maintenance_schedules')->onDelete('set null');
         });
     }
 
@@ -23,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('maintenance', function (Blueprint $table) {
-            $table->dropForeignIdFor('MaintenanceSchedule');
+            $table->dropForeign(['schedule_id']);
             $table->dropColumn('schedule_id');
         });
     }

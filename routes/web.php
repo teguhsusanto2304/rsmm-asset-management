@@ -87,7 +87,8 @@ Route::middleware(['auth'])->prefix('master-data')->group(function () {
     Route::get('maintenance/{maintenance}', [MaintenanceController::class, 'show'])->name('maintenance.show');
     
     // Maintenance Schedule Routes
-    Route::resource('maintenance-schedule', MaintenanceScheduleController::class)->except(['create']);
+    Route::resource('maintenance-schedule', MaintenanceScheduleController::class);
+    //->except(['create']);
     Route::get('maintenance-schedule/create', [MaintenanceScheduleController::class, 'create'])->name('maintenance-schedule.create');
     Route::post('maintenance-schedule/{maintenanceSchedule}/pause', [MaintenanceScheduleController::class, 'pause'])->name('maintenance-schedule.pause');
     Route::post('maintenance-schedule/{maintenanceSchedule}/resume', [MaintenanceScheduleController::class, 'resume'])->name('maintenance-schedule.resume');

@@ -18,8 +18,13 @@ return new class extends Migration
         $pivotRole = $columnNames['role_pivot_key'] ?? 'role_id';
         $pivotPermission = $columnNames['permission_pivot_key'] ?? 'permission_id';
 
-        // Disable foreign key checks for MySQL
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        // Disable foreign key checks based on database driver
+        $driver = DB::getDriverName();
+        if ($driver === 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        } elseif ($driver === 'sqlite') {
+            DB::statement('PRAGMA foreign_keys=OFF');
+        }
 
         try {
             // Drop and recreate model_has_permissions table with UUID support
@@ -56,8 +61,12 @@ return new class extends Migration
                     'model_has_roles_role_model_type_primary');
             });
         } finally {
-            // Re-enable foreign key checks
-            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+            // Re-enable foreign key checks based on database driver
+            if ($driver === 'mysql') {
+                DB::statement('SET FOREIGN_KEY_CHECKS=1');
+            } elseif ($driver === 'sqlite') {
+                DB::statement('PRAGMA foreign_keys=ON');
+            }
         }
     }
 
@@ -72,8 +81,13 @@ return new class extends Migration
         $pivotRole = $columnNames['role_pivot_key'] ?? 'role_id';
         $pivotPermission = $columnNames['permission_pivot_key'] ?? 'permission_id';
 
-        // Disable foreign key checks for MySQL
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        // Disable foreign key checks based on database driver
+        $driver = DB::getDriverName();
+        if ($driver === 'mysql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        } elseif ($driver === 'sqlite') {
+            DB::statement('PRAGMA foreign_keys=OFF');
+        }
 
         try {
             // Recreate model_has_permissions table with original unsignedBigInteger
@@ -110,8 +124,12 @@ return new class extends Migration
                     'model_has_roles_role_model_type_primary');
             });
         } finally {
-            // Re-enable foreign key checks
-            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+            // Re-enable foreign key checks based on database driver
+            if ($driver === 'mysql') {
+                DB::statement('SET FOREIGN_KEY_CHECKS=1');
+            } elseif ($driver === 'sqlite') {
+                DB::statement('PRAGMA foreign_keys=ON');
+            }
         }
     }
 };

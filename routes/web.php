@@ -14,6 +14,7 @@ use App\Http\Controllers\MaintenanceScheduleController;
 use App\Http\Controllers\TechnicianMaintenanceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ProfileController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -29,6 +30,12 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
+    
+    // Profile Routes
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile/change-password', [ProfileController::class, 'showChangePassword'])->name('profile.change-password');
+    Route::put('/profile/change-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
 });
 Route::get('/', function () {
     return view('welcome');

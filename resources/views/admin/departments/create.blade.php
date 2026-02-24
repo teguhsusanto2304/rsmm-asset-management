@@ -13,15 +13,9 @@
             label="Nama Departemen"
             placeholder="Nama Departemen"
             name="department"
-            value="{{ old('name') }}"
+            value="{{ old('department') }}"
             required
         />
-
-        <textarea
-            name="description"
-            placeholder="Deskripsi"
-            class="form-input w-full rounded-lg border-gray-300"
-        >{{ old('description') }}</textarea>
 
         <select name="parent_id" class="form-input w-full rounded-lg border-gray-300">
             <option value="">-- Parent Departemen --</option>
@@ -35,7 +29,7 @@
         <select name="user_id" class="form-input w-full rounded-lg border-gray-300">
             <option value="">-- Kepala Unit --</option>
             @foreach($users as $user)
-                <option value="{{ $user->id }}" {{ old('head_user_id') == $user->id ? 'selected' : '' }}>
+                <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
                     {{ $user->name }}
                 </option>
             @endforeach

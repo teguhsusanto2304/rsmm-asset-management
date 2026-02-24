@@ -31,17 +31,11 @@
         <x-input
             label="Nama Departemen"
             placeholder="Nama Departemen"
-            name="name"
+            name="department"
             value="{{ old('department', $department->department) }}"
             required
         />
 
-        {{-- Deskripsi --}}
-        <textarea
-            name="description"
-            placeholder="Deskripsi"
-            class="form-input w-full rounded-lg border-gray-300"
-        >{{ old('description', $department->description) }}</textarea>
 
         {{-- Parent Departemen --}}
         <select name="parent_id" class="form-input w-full rounded-lg border-gray-300">
@@ -57,12 +51,12 @@
         </select>
 
         {{-- Kepala Unit --}}
-        <select name="head_user_id" class="form-input w-full rounded-lg border-gray-300">
+        <select name="user_id" class="form-input w-full rounded-lg border-gray-300">
             <option value="">-- Kepala Unit --</option>
             @foreach($users as $user)
                 <option
                     value="{{ $user->id }}"
-                    {{ old('head_user_id', $department->head_user_id) == $user->id ? 'selected' : '' }}
+                    {{ old('user_id', $department->user_id) == $user->id ? 'selected' : '' }}
                 >
                     {{ $user->name }}
                 </option>

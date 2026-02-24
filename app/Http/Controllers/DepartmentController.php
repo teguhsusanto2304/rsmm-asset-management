@@ -55,10 +55,11 @@ class DepartmentController extends Controller
             'department' => 'required',
             'user_id'    => 'required',
         ], [
+            'department.required' => 'Nama departemen harus diisi.',
             'user_id.required'    => 'Departemen/Unit harus memiliki penanggung jawab.',
         ]);
 
-        Department::create($request->all());
+        Department::create($request->only(['department', 'parent_id', 'user_id', 'status']));
 
         return redirect()->route('departments.index')
             ->with('success','Department created');
@@ -74,7 +75,15 @@ class DepartmentController extends Controller
 
     public function update(Request $request, Department $department)
     {
-        $department->update($request->all());
+        $request->validate([
+            'department' => 'required',
+            'user_id'    => 'required',
+        ], [
+            'user_id.required'    => 'Departemen/Unit harus memiliki penanggung jawab.',
+            'department.required' => 'Nama departemen harus diisi.',
+        ]);
+
+        $department->update($request->only(['department', 'parent_id', 'status', 'user_id']));
 
         return redirect()->route('departments.index')
             ->with('success','Department updated');

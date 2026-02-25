@@ -8,16 +8,23 @@
             <p class="text-[#617989]">Kelola semua asset yang terdaftar di sistem.</p>
         </div>
         <div class="flex gap-2">
-            <a href="{{ route('assets.import') }}"
-               class="flex items-center gap-2 rounded-lg h-10 px-4 bg-green-600 text-white text-sm font-bold hover:bg-green-700">
-                <span class="material-symbols-outlined">upload_file</span>
-                Import Asset
-            </a>
-            <a href="{{ route('assets.create') }}"
-               class="flex items-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90">
-                <span class="material-symbols-outlined">add</span>
-                Tambah Asset
-            </a>
+            {{-- IMPORT BUTTON - Only if user can create assets --}}
+            @canAccessFeature('asset.import')
+                <a href="{{ route('assets.import') }}"
+                   class="flex items-center gap-2 rounded-lg h-10 px-4 bg-green-600 text-white text-sm font-bold hover:bg-green-700">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    Import Asset
+                </a>
+            @endcanAccessFeature
+
+            {{-- CREATE BUTTON - Only if user can create assets --}}
+            @canAccessFeature('asset.create')
+                <a href="{{ route('assets.create') }}"
+                   class="flex items-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90">
+                    <span class="material-symbols-outlined">add</span>
+                    Tambah Asset
+                </a>
+            @endcanAccessFeature
         </div>
     </div>
 
@@ -202,21 +209,30 @@
                             </td>
                             <td class="p-3 text-right">
                                 <div class="flex justify-end gap-2">
+                                    {{-- VIEW/DETAIL BUTTON - All authenticated users --}}
                                     <a href="{{ route('assets.show', $asset) }}"
                                        class="text-gray-600 hover:bg-gray-100 p-1 rounded"
                                        title="Detail">
                                         <span class="material-symbols-outlined text-base">visibility</span>
                                     </a>
-                                    <a href="{{ route('assets.assign', $asset) }}"
-                                       class="text-blue-600 hover:bg-blue-100 p-1 rounded"
-                                       title="Tugaskan">
-                                        <span class="material-symbols-outlined text-base">assignment</span>
-                                    </a>
-                                    <a href="{{ route('assets.edit', $asset) }}"
-                                       class="text-primary hover:bg-primary/10 p-1 rounded"
-                                       title="Edit">
-                                        <span class="material-symbols-outlined text-base">edit</span>
-                                    </a>
+
+                                    {{-- ASSIGN BUTTON - Only if user can edit assets --}}
+                                    @canAccessFeature('asset.assign')
+                                        <a href="{{ route('assets.assign', $asset) }}"
+                                           class="text-blue-600 hover:bg-blue-100 p-1 rounded"
+                                           title="Tugaskan">
+                                            <span class="material-symbols-outlined text-base">assignment</span>
+                                        </a>
+                                    @endcanAccessFeature
+
+                                    {{-- EDIT BUTTON - Only if user can edit assets --}}
+                                    @canAccessFeature('asset.edit')
+                                        <a href="{{ route('assets.edit', $asset) }}"
+                                           class="text-primary hover:bg-primary/10 p-1 rounded"
+                                           title="Edit">
+                                            <span class="material-symbols-outlined text-base">edit</span>
+                                        </a>
+                                    @endcanAccessFeature
                                 </div>
                             </td>
                         </tr>

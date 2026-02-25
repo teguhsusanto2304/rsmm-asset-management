@@ -14,10 +14,12 @@ class RoleSeeder extends Seeder
     {
         // Define roles to create
         $roles = [
-            'admin',
-            'direktur',
-            'manager',
-            'supervisor',
+            'admin',           // System Administrator - Full access
+            'direktur',        // Director - High-level management
+            'manager',         // Manager - Department management
+            'supervisor',      // Supervisor - Limited management
+            'staff',           // Regular Staff - Basic access
+            'technician',      // Technician - Maintenance operations
         ];
 
         // Create each role
@@ -31,5 +33,10 @@ class RoleSeeder extends Seeder
         }
 
         $this->command->info('Roles seeded successfully!');
+        $this->command->line('Created ' . count($roles) . ' roles:');
+        foreach ($roles as $role) {
+            $this->command->line('  ✓ ' . ucfirst($role));
+        }
     }
 }
+

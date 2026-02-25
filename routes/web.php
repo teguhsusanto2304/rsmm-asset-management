@@ -153,5 +153,5 @@ Route::middleware(['auth'])->prefix('master-data')->group(function () {
         Route::get('/reports/{maintenance}', [TechnicianMaintenanceController::class, 'report'])->name('technician.report');
         Route::get('/statistics', [TechnicianMaintenanceController::class, 'statistics'])->name('technician.statistics');
     });
-});
+
 
